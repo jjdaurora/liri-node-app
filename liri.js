@@ -87,10 +87,9 @@ function runOmdb (liriMovie) {
 	if (liriMovie === undefined) {
 		liriMovie = "Mr. Nobody";
 	}
-
-var request = require("request");
+	
 // Then run a request to the OMDB API with the movie specified
-	request("http://www.omdbapi.com/?t="+ liriMovie + "&y=&plot=short&apikey=trilogy", function(error, response, body) {
+	request("http://www.omdbapi.com/?t=" + liriMovie + "&y=&plot=short&apikey=trilogy", function(error, response, body) {
 	  // If the request is successful (i.e. if the response status code is 200)
 	  if (!error && response.statusCode === 200) {
 	    // Parse the body of the site and recover just the imdbRating
@@ -114,7 +113,7 @@ function runDoWhatitSays () {
     if (error) {
       return console.log(error);
 	}
-	
+
 	var dataArr = data.split(",");
 	liriTrack = dataArr[1];
 	runSpotify(liriTrack);
