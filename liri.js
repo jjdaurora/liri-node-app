@@ -1,9 +1,10 @@
 // required files and apis 
-
+var dotenv = require("dotenv").config();
 var keys = require("./keys.js");
 var request = require("request");
 var twitter = require("twitter");
 var Spotify = require("node-spotify-api");
+var fs = require("fs")
 
 
 var command = process.argv[2];
@@ -21,7 +22,7 @@ switch (command) {
 		runOmdb(liriMovie);
 		break;
 	case "do-what-it-says":
-		runAltFunction();
+		runDoWhatitSays();
 		break;
 	default: 
 }
@@ -105,3 +106,20 @@ var request = require("request");
 	  }
 	});
 }; 
+
+function runDoWhatitSays () {
+
+	fs.readFile("random.txt", "utf8", function(error, data) {
+    // If the code experiences any errors it will log the error to the console.
+    if (error) {
+      return console.log(error);
+	}
+	
+	var dataArr = data.split(",");
+	liriTrack = dataArr[1];
+	runSpotify(liriTrack);
+
+
+    // console.log(dataArr);
+  });
+}
