@@ -1,0 +1,32 @@
+{
+  "name": "liri-app",
+  "version": "1.0.0",
+  "description": "This is my Liri Node Application.",
+  "main": "keys.js",
+  "dependencies": {
+    "i": "^0.3.6",
+    "node-spotify-api": "^1.0.7",
+    "npm": "^5.6.0",
+    "request": "^2.83.0",
+    "twitter": "^1.7.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjdaurora/liri-node-app.git"
+  },
+  "keywords": [
+    "liri",
+    "node",
+    "app"
+  ],
+  "author": "JJ D'Aurora",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjdaurora/liri-node-app/issues"
+  },
+  "homepage": "https://github.com/jjdaurora/liri-node-app#readme"
+}

@@ -3,21 +3,39 @@
 var keys = require("./keys.js");
 var request = require("request");
 var twitter = require("twitter");
-var spotify = require('node-spotify-api');
-
-// my tweets: pulls my 20 most recent tweets 
+var Spotify = require("node-spotify-api");
 
 
-if (process.argv[2] === "my-tweets") {
+var command = process.argv[2];
+var liriTrack = process.argv[3];
+var liriMovie = process.argv[3];
+
+switch (command) {
+	case "my-tweets":
+		runMyTweets();
+		break;
+	case "spotify-this-song":
+		runSpotify(liriTrack);
+		break;
+	case "movie-this":
+		runOmdb(liriMovie);
+		break;
+	case "do-what-it-says":
+		runAltFunction();
+		break;
+	default: 
+}
+
+// Twitter 
+function runMyTweets () {
 
 		var client = new twitter(keys)
 
-		var params = {
+	var parameters = {
 			screen_name: 'jjdaurora', 
 			count: 20
-		}; 
-
-	client.get('statuses/user_timeline', params, function(error, tweets, response) {
+	}
+	client.get('statuses/user_timeline', parameters, function (error, tweets, response) {
 		if (error)	{
 			console.log(error);
 		}
@@ -37,53 +55,53 @@ if (process.argv[2] === "my-tweets") {
 
 // spotify 
 
-if (process.argv[2] === "spotify-this-song") {
+function runSpotify (liriTrack) {
 
-	  var lirify = new spotify({
-	  id: 'e8644fbd17994e87bee7ce0557f71914',
-	  secret: '121ecc1d6ee44c9c99df4f550952d68f'
+	if (liriTrack === undefined) {
+		liriTrack = "The Sign Ace of Base";
+	}
+
+	var spotify = new Spotify({
+		id: "e8644fbd17994e87bee7ce0557f71914",
+		secret: "121ecc1d6ee44c9c99df4f550952d68f"
 	});
 
-	var nodeArgs = process.argv; 
-
-	var liriTrack = "";
-
-		for (var i = 3; i < nodeArgs.length; i++){
-			if (i > 3 && i < nodeArgs.length){
-				liriTrack = liriTrack + "+" + nodeArgs[i];
-			}
-			else {
-				liriTrack += nodeArgs[i];
-			}
+	spotify.search({ type: 'track', query: liriTrack }, function (err, data) {
+		if (err) {
+			return console.log('Spotify hates you. Find out why: ' + err);
 		}
 
-		if (liriTrack.length < 1) {
-			liriTrack = "The Sign Ace of Base";
-		}
+		console.log("-------------------------------------------------------")
+		console.log("Artist: " + data.tracks.items[0].album.artists[0].name);
+		console.log("Title: " + data.tracks.items[0].name);
+		console.log("Album: " + data.tracks.items[0].album.name);
+		console.log("Preview: " + data.tracks.items[0].external_urls.spotify);
+		console.log("-------------------------------------------------------")
 
+	});
+}
 
-	function startLirify() {
-		lirify.search({ type: 'track', query: liriTrack}, function(err, data) {
-	  		if (err) {
-	  	  
-	  	  	return console.log('Error occurred: ' + err);
-	 	
-	 	 	} // grabbed this from the npm documentation 
-	 		
-	 		else {
-	 			var searchedTrack = data.tracks.items[0];
-	 			var liriResult = 
-	 							console.log("--------------------------")
-	 							console.log(searchedTrack.artists[0].name)
-	 							console.log(searchedTrack.name);
-	 							console.log(searchedTrack.external_urls.spotify);
-	 							console.log(searchedTrack.album.name);
-	 							console.log("--------------------------")
+function runOmdb (liriMovie) {
 
- 					}
-			});
-		}; 
+	if (liriMovie === undefined) {
+		liriMovie = "Mr. Nobody";
+	}
 
-	startLirify();
-	
-};
+var request = require("request");
+// Then run a request to the OMDB API with the movie specified
+	request("http://www.omdbapi.com/?t="+ liriMovie + "&y=&plot=short&apikey=trilogy", function(error, response, body) {
+	  // If the request is successful (i.e. if the response status code is 200)
+	  if (!error && response.statusCode === 200) {
+	    // Parse the body of the site and recover just the imdbRating
+	    // (Note: The syntax below for parsing isn't obvious. Just spend a few moments dissecting it).
+		console.log("-------------------------------------------------------");
+		console.log("Movie Title: " + JSON.parse(body).Title);
+		console.log("Release Year: " + JSON.parse(body).Year);
+		console.log("Rotten Tomatoes Rating: "  + JSON.parse(body).tomatoRating);
+		console.log("Production Location: " + JSON.parse(body).Country);
+		console.log("Plot: " + JSON.parse(body).Plot);
+		console.log("Rating: " + JSON.parse(body).imdbRating);
+		console.log("-------------------------------------------------------")
+	  }
+	});
+}; 
